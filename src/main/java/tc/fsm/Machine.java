@@ -20,7 +20,7 @@ public final class Machine<I, V> {
             for (State<I, V> s : states) {
                 this.registerState(s);
             }
-            this.setState(states[0].getClass());
+            this.setState(states[0].name());
         }
     }
     /**
@@ -28,27 +28,25 @@ public final class Machine<I, V> {
      * @param s a State object.
      * @return the string name of the state.
      */
-    public synchronized String registerState(State<I,V> s) {
-        this.states.put(s.name, s);
-        return s.name;
+    public synchronized void registerState(State<I,V> s) {
+        this.states.put(s.name(), s);
     }
     /**
      * Get the current state as a string.
-     * @return
+     * @return String key of the current state.
      */
     public synchronized String getState() {
         if (this.currentState != null) {
-            return this.currentState.name;
+            return this.currentState.name();
         } else {
             throw new NullPointerException("null current state");
         }
     }
     /**
      * Set the current state to be the registered instance of CLASS.
-     * @param cls class of state to be set to.
+     * @param stateName name of state to be set to.
      */
-    public synchronized void setState(Class cls) {
-        String stateName = cls.getName();
+    public synchronized void setState(String stateName) {
         if (this.states.containsKey(stateName)) {
             this.currentState = this.states.get(stateName);
         }
@@ -59,7 +57,7 @@ public final class Machine<I, V> {
      * @return the data result of the current state's processing.
      */
     public synchronized V process(I input) {
-        V result = null;
+        V result;
         if (this.currentState != null) {
             ProcessResult<V> stateResult = this.currentState.process(input);
             result = stateResult.data;
