@@ -1,6 +1,6 @@
 package tc.fsm;
 
-interface State<I, V> {
+public interface State<I, V> {
     /**
      * Registration key.
      * @return String reg key.
