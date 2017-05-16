@@ -2,6 +2,8 @@ package tc.fsm;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 /**
  * A state machine transition controller.
@@ -15,6 +17,7 @@ public final class Machine<I, V> {
      * Constructor with optional set of initial states to register.
      * @param states repeated states, of which the first is the initial state.
      */
+    @SafeVarargs
     public Machine(State<I,V>... states) {
         if (states != null && states.length > 0) {
             for (State<I, V> s : states) {
@@ -26,7 +29,6 @@ public final class Machine<I, V> {
     /**
      * Registers state S into this machine.
      * @param s a State object.
-     * @return the string name of the state.
      */
     public synchronized void registerState(State<I,V> s) {
         this.states.put(s.name(), s);
@@ -52,7 +54,7 @@ public final class Machine<I, V> {
         }
     }
     /**
-     * Delegate processing tot he current state
+     * Delegate processing to the current state
      * @param input input vector to be processed.
      * @return the data result of the current state's processing.
      */
@@ -66,5 +68,27 @@ public final class Machine<I, V> {
             throw new NullPointerException("null current state");
         }
         return result;
+    }
+    @Override
+    public String toString() {
+        StringBuilder result = new StringBuilder("{");
+        SortedSet<String> allKeys = new TreeSet<>(this.states.keySet());
+        boolean rest = false;
+        for (String key: allKeys) {
+            if (rest) {
+                result.append(",");
+            }
+            boolean current = (this.currentState != null && this.currentState.name().equals(key));
+            if (current) {
+                result.append("[");
+            }
+            result.append(key);
+            if (current) {
+                result.append("]");
+            }
+            rest = true;
+        }
+        result.append("}");
+        return result.toString();
     }
 }
