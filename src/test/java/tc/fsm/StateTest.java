@@ -17,13 +17,13 @@ public class StateTest {
         TestStateC c = new TestStateC();
         ProcessResult<String> pr;
         pr = a.process("foo");
-        Assert.assertEquals("tc.fsm.TestStateB", pr.next);
+        Assert.assertEquals("TestStateB", pr.next);
         Assert.assertEquals("A:foo", pr.data);
         pr = b.process("bar");
-        Assert.assertEquals("tc.fsm.TestStateC", pr.next);
+        Assert.assertEquals("TestStateC", pr.next);
         Assert.assertEquals("B:bar", pr.data);
         pr = c.process("baz");
-        Assert.assertEquals("tc.fsm.TestStateA", pr.next);
+        Assert.assertEquals("TestStateA", pr.next);
         Assert.assertEquals("C:baz", pr.data);
     }
 }
